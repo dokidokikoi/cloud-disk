@@ -1,0 +1,215 @@
+service core-api {
+	@handler UserLogin
+	post /user/login(LoginRequest) returns (LoginReply)
+	
+	@handler UserDetail
+	get /user/detail(UserDetailRequest) returns(UserDetailReply)
+	
+	@handler MailCodeSendRegister
+	post /mail/code/send/register(MailCodeSendRequest) returns (MailCodeSendReply)
+	
+	@handler UserRegister
+	post /user/register(UserRegsterRequest) returns (UserRegisterReply)
+	
+	@handler ShareBasicDetail
+	post /share/basic/detail(ShareBasicDetailRequest) returns (ShareBasicDetailReply)
+}
+
+@server (
+	middleware: Auth
+)
+service core-api {
+	@handler FileUpload
+	post /file/upload(FileUploadRequest) returns (FileUploadReply)
+	
+	@handler UserRepositorySave
+	post /user/repository/save(UserRepositorySaveRequest) returns (UserRepositorySaveReply)
+	
+	@handler UserFileList
+	get /user/file/list(UserFileListRequest) returns (UserFileListReply)
+	
+	@handler UserFileNameUpdate
+	post /user/file/name/update(UserFileNameUpdateRequest) returns (UserFileNameUpdateReply)
+	
+	@handler UserFolderCreate
+	post /user/folder/create(UserFolderCreateRequest) returns (UserFolderCreateReply)
+	
+	@handler UserFileDelete
+	delete /user/file/delete(UserFileDeleteRequest) returns (UserFileDeleteReply)
+	
+	@handler UserFileMove
+	put /user/file/move(UserFileMoveRequest) returns (UserFileMoveReply)
+	
+	@handler ShareBasicCreate
+	post /share/basic/create(ShareBasicCreateRequest) returns (ShareBasicCreateReply)
+	
+	@handler ShareBasicSave
+	post /share/basic/save(ShareBasicSaveRequest) returns (ShareBasicSaveReply)
+	
+	@handler RefreshAuthorization
+	post /refresh/authorization(RefreshAuthorizationRequest) returns (RefreshAuthorizationReply)
+	
+	@handler FileUploadPrepare
+	post /file/upload/prepare(FileUploadPrepareRequest) returns (FileUploadPrepareReply)
+}
+
+type LoginRequest {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+}
+
+type LoginReply {
+	Token        string `json:"token"`
+	RefreshToken string `json:"refreshToken"`
+}
+
+type UserDetailRequest {
+	Identity string `json:"identity"`
+}
+
+type UserDetailReply {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
+type MailCodeSendRequest {
+	Email string `json:"email"`
+}
+
+type MailCodeSendReply {
+}
+
+type UserRegsterRequest {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+	Code     string `json:"code"`
+}
+
+type UserRegisterReply {
+}
+
+type FileUploadRequest {
+	Hash string `json:"hash,optional"`
+	Name string `json:"name,optional"`
+	Ext  string `json:"ext,optional"`
+	Size int64  `json:"size,optional"`
+	Path string `json:"path,optional"`
+}
+
+type FileUploadReply {
+	Identity string `json:"identity"`
+	Ext      string `json:"ext"`
+	Name     string `json:"name"`
+}
+
+type UserRepositorySaveRequest {
+	ParentId           int64  `json:"parentId"`
+	RepositoryIdentity string `json:"repositoryIdentity"`
+	Ext                string `json:"ext"`
+	Name               string `json:"name"`
+}
+
+type UserRepositorySaveReply {
+	Identity string `json:"identity"`
+}
+
+type UserFileListRequest {
+	Identity string `json:"identity,optional"`
+	Page     int    `json:"id,optional"`
+	Size     int    `json:"id,optional"`
+}
+
+type UserFileListReply {
+	List  []*UserFile `json:"list"`
+	Count int64       `json:"count"`
+}
+
+type UserFile {
+	Id                 int64  `json:"id"`
+	Identity           string `json:"identity"`
+	RepositoryIdentity string `json:"repositoryIdentity"`
+	Name               string `json:"name"`
+	Ext                string `json:"ext"`
+	Path               string `json:"path"`
+	Size               int64  `json:"size"`
+}
+
+type UserFileNameUpdateRequest {
+	Identity string `json:"identity"`
+	Name     string `json:"name"`
+}
+
+type UserFileNameUpdateReply {
+}
+
+type UserFolderCreateRequest {
+	ParentId int64  `json:"parentId"`
+	Name     string `json:"name"`
+}
+
+type UserFolderCreateReply {
+	Identity string `json:"identity"`
+}
+
+type UserFileDeleteRequest {
+	Identity string `json:"identity"`
+}
+
+type UserFileDeleteReply {
+}
+
+type UserFileMoveRequest {
+	Identity       string `json:"identity"`
+	ParentIdentity string `json:"parentIdentity"`
+}
+
+type UserFileMoveReply {
+}
+type ShareBasicCreateRequest {
+	UserRepositoryIdentity string `json:"userRepositoryIdentity"`
+	ExpiredTime            int    `json:"expiredTime"`
+}
+
+type ShareBasicCreateReply {
+	Identity string `json:"identity"`
+}
+
+type ShareBasicDetailRequest {
+	Identity string `json:"identity"`
+}
+
+type ShareBasicDetailReply {
+	RepositoryIdentity string `json:"repositoryIdentity"`
+	Name               string `json:"name"`
+	Ext                string `json:"ext"`
+	Size               int64  `json:"size"`
+	Path               string `json:"path"`
+}
+
+type ShareBasicSaveRequest {
+	RepositoryIdentity string `json:"repositoryIdentity"`
+	ParentId           int64  `json:"parentId"`
+}
+
+type ShareBasicSaveReply {
+	Identity string `json:"identity"`
+}
+
+type RefreshAuthorizationRequest {
+}
+
+type RefreshAuthorizationReply {
+	Token        string `json:"token"`
+	RefreshToken string `json:"refreshToken"`
+}
+
+type FileUploadPrepareRequest {
+	Md5  string `json:"md5"`
+	Name string `json:"name"`
+}
+
+type FileUploadPrepareReply {
+	Identity string `json:"identity"`
+	UploadId string `json:"uploadId"`
+}
